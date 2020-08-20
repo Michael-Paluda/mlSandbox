@@ -14,7 +14,8 @@ class CountryGui:
         countries.sort()
 
         self.root = Tk.Tk()
-        self.root.geometry("300x300")
+        self.root.title("Select Country To View Data")
+        self.root.geometry("400x300")
         self.xAxisName = xAxisName
         
         self.pick = Tk.StringVar()
@@ -25,8 +26,9 @@ class CountryGui:
         self.graphPick = Tk.IntVar()
         self.graphPick.set(1)
         self.radButtons = []
-        for key in self.options:
-            self.radButtons.append(Tk.Radiobutton(self.root,text = self.options[key].displayName, variable = self.graphPick, value = key))
+        if self.options:
+            for key in self.options:
+                self.radButtons.append(Tk.Radiobutton(self.root,text = self.options[key].displayName, variable = self.graphPick, value = key))
         
         self.dataFrame = dataFrame
         self.countryContainer = set([])
