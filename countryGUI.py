@@ -8,7 +8,10 @@ import GuiOption
 
 class CountryGui:
 
-    def __init__(self, countries, options, xAxisName):
+    def __init__(self, dataFrame, options, xAxisName):
+        countries = list(set(dataFrame.index.values))
+        countries.sort()
+
         self.root = Tk.Tk()
         self.root.geometry("300x300")
         self.xAxisName = xAxisName
@@ -33,7 +36,7 @@ class CountryGui:
         self.Label = Tk.Label(self.root, text = "Countries To Display Below")
         self.listBox = Tk.Listbox(self.root)
         
-        self.options.pack()
+        self.optionsMenu.pack()
         self.buttonFrame.pack()
         self.addButton.pack(side = Tk.LEFT)
         self.clearButton.pack(side = Tk.RIGHT)
@@ -52,13 +55,13 @@ class CountryGui:
         displayName = self.options[pickLocal].displayName
         pandasName = self.options[pickLocal].pandasName
           
-        plt.xlabel(xAxisName)
+        plt.xlabel(self.xAxisName)
         plt.ylabel(displayName)
-        plt.title("{} vs {}".format(displayName, xAxisName))
+        plt.title("{} vs {}".format(displayName, self.xAxisName))
             
         for country in self.countryContainer:
             country = self.dataFrame.loc[country]
-            xData = list(country[xAxisName])
+            xData = list(country[self.xAxisName])
             yData = list(country[pandasName])
             plt.plot(xData, yData, 'o', label = country.index[0])
                
