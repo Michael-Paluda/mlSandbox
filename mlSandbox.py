@@ -19,7 +19,7 @@ def getCovidData():
 def getPopData():
     data_url = 'https://covid.ourworldindata.org/data/ecdc/locations.csv'
     # read data from url as pandas dataframe
-    return pd.read_csv(data_url)
+    return pd.read_csv(data_url, index_col = 'location')
 
 if __name__ == "__main__":
 

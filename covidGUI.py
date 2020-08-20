@@ -14,6 +14,8 @@ class CovidGui(countryGUI.CountryGui):
         options[1] = GuiOption.Option("New Cases", "new_cases")
         options[2] = GuiOption.Option("New Deaths", "new_deaths")
 
+        country_data.loc[:, 'date'] = pd.to_datetime(country_data['date'], format='%Y-%m-%d')
+
         super().__init__(country_data, options, "date")
 
 def main():

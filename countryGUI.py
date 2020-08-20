@@ -3,6 +3,7 @@ import tkinter as Tk
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 from mpl_toolkits import mplot3d
 import GuiOption
 
@@ -49,7 +50,7 @@ class CountryGui:
         Tk.mainloop()
     
     def plotData(self):
-        fig = plt.figure()
+        fig, ax = plt.subplots()
         
         pickLocal = self.graphPick.get()
         displayName = self.options[pickLocal].displayName
@@ -58,13 +59,20 @@ class CountryGui:
         plt.xlabel(self.xAxisName)
         plt.ylabel(displayName)
         plt.title("{} vs {}".format(displayName, self.xAxisName))
+        if self.xAxisName == 'date':
+            months = mdates.MonthLocator()  # every month
+            months_fmt = mdates.DateFormatter('%b')
             
         for country in self.countryContainer:
             country = self.dataFrame.loc[country]
             xData = list(country[self.xAxisName])
             yData = list(country[pandasName])
             plt.plot(xData, yData, 'o', label = country.index[0])
-               
+        if self.xAxisName == 'date':
+            ax.xaxis.set_major_locator(months)
+            ax.xaxis.set_major_formatter(months_fmt)
+            fig.autofmt_xdate()
+                
         plt.legend(loc = "upper left")  
         plt.show()
 
