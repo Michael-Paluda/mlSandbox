@@ -20,49 +20,82 @@ class GUI:
         self.rad1 = Tk.Radiobutton(self.root, text= "Population", variable = self.graphPick, value = 1)
         self.rad2 = Tk.Radiobutton(self.root, text= "gdpPercap", variable = self.graphPick, value = 2)
         self.rad3 = Tk.Radiobutton(self.root, text= "Life Expectancy", variable = self.graphPick, value = 3)
+        
         self.country_data = country_data
         self.countryContainer = set([])
+        self.buttonFrame = Tk.Frame(self.root)
         self.plotButton = Tk.Button(self.root, text = "Plot Data", command = self.plotData)
-        self.addButton = Tk.Button(self.root, text = "Add Country", command = self.addCountry)
+        self.addButton = Tk.Button(self.buttonFrame, text = "Add Country", command = self.addCountry)
+        self.clearButton = Tk.Button(self.buttonFrame, text = "Clear Countries", command = self.clearCountries)
+        self.Label = Tk.Label(self.root, text = "Countries To Display Below")
+        self.listBox = Tk.Listbox(self.root)
         
         self.options.pack()
+        self.buttonFrame.pack()
+        self.addButton.pack(side = Tk.LEFT)
+        self.clearButton.pack(side = Tk.RIGHT)
         self.rad1.pack()
         self.rad2.pack()
         self.rad3.pack()
         self.plotButton.pack()
-        self.addButton.pack()
-        Tk.mainloop()
-    def plotData(self):
+        self.Label.pack()
+        self.listBox.pack()
         
-        for country in self.countryContainer:
+        Tk.mainloop()
+    
+    def plotData(self):
+        fig = plt.figure()
+        if self.graphPick.get() == 1:
             
-            country = self.country_data.loc[country]
-            xData = list(country["year"])
-            fig = plt.figure()
             plt.xlabel("years")
-
-            if self.graphPick.get() == 1:
-                yData = list(country["pop"])
-                plt.ylabel("pop")
-                plt.title("Population vs Time")
+            plt.ylabel("pop")
+            plt.title("Population vs Time")
             
-            elif self.graphPick.get() == 2:
-                yData = list(country["gdpPercap"])
-                plt.ylabel("gdpPercap")
-                plt.title("Income vs Time")
-            else:
-                yData = list(country["lifeExp"])
-                plt.ylabel("lifeExp")
-                plt.title("Life Expectancy vs Time")
+            for country in self.countryContainer:
+                country = self.country_data.loc[country]
+                xData = list(country["year"])
+                yData = list(country["pop"])
+                plt.plot(xData, yData, 'o', label = country.index[0])
+               
+        elif self.graphPick.get() == 2:
 
-            plt.plot(xData, yData, 'o')
+            plt.xlabel("years")
+            plt.ylabel("gdpPercap")
+            plt.title("Income vs Time")
+            
+            for country in self.countryContainer:
+                country = self.country_data.loc[country]
+                xData = list(country["year"])
+                yData = list(country["gdpPercap"])
+                plt.plot(xData, yData, 'o', label = country.index[0])
+                 
+        else:
+
+            plt.xlabel("years")
+            plt.ylabel("lifeExp")
+            plt.title("Life Expectancy vs Time")
+            
+            for country in self.countryContainer:
+            
+                country = self.country_data.loc[country]
+                xData = list(country["year"])
+                yData = list(country["lifeExp"])
+                plt.plot(xData, yData, 'o', label = country.index[0])
+
+        plt.legend(loc = "upper left")  
         plt.show()
+
     def addCountry(self):
         pickLocal = self.pick.get()
-        if pickLocal not in self.country_data.index:
+        if pickLocal not in self.country_data.index or pickLocal in self.countryContainer:
                 return
 
         self.countryContainer.add(pickLocal)
+        self.listBox.insert(Tk.END, pickLocal)
+    
+    def clearCountries(self):
+        self.countryContainer.clear()
+        self.listBox.delete(0, Tk.END)
 
 def main():
     country_data = mlSandbox.getCountryData()

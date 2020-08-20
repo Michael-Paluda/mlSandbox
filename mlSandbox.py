@@ -11,6 +11,16 @@ def getCountryData():
     # read data from url as pandas dataframe
     return pd.read_csv(data_url, index_col = 'country')
 
+def getCovidData():
+    data_url = 'https://covid.ourworldindata.org/data/ecdc/full_data.csv'
+    # read data from url as pandas dataframe
+    return pd.read_csv(data_url, index_col = 'location')
+
+def getPopData():
+    data_url = 'https://covid.ourworldindata.org/data/ecdc/locations.csv'
+    # read data from url as pandas dataframe
+    return pd.read_csv(data_url)
+
 if __name__ == "__main__":
 
     pres =  pd.read_csv("C:\\Users\\Michael Paluda\\Downloads\\president_heights_party.csv", index_col = 'name')
