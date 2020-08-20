@@ -21,40 +21,48 @@ class GUI:
         self.rad2 = Tk.Radiobutton(self.root, text= "gdpPercap", variable = self.graphPick, value = 2)
         self.rad3 = Tk.Radiobutton(self.root, text= "Life Expectancy", variable = self.graphPick, value = 3)
         self.country_data = country_data
-        self.button = Tk.Button(self.root, text = "See Data", command = self.plotData)
+        self.countryContainer = set([])
+        self.plotButton = Tk.Button(self.root, text = "Plot Data", command = self.plotData)
+        self.addButton = Tk.Button(self.root, text = "Add Country", command = self.addCountry)
         
         self.options.pack()
-        self.rad1.pack(side = Tk.CENTER)
-        self.rad2.pack(side = Tk.CENTER)
-        self.rad3.pack(side = Tk.CENTER)
-        self.button.pack()
+        self.rad1.pack()
+        self.rad2.pack()
+        self.rad3.pack()
+        self.plotButton.pack()
+        self.addButton.pack()
         Tk.mainloop()
     def plotData(self):
+        
+        for country in self.countryContainer:
+            
+            country = self.country_data.loc[country]
+            xData = list(country["year"])
+            fig = plt.figure()
+            plt.xlabel("years")
+
+            if self.graphPick.get() == 1:
+                yData = list(country["pop"])
+                plt.ylabel("pop")
+                plt.title("Population vs Time")
+            
+            elif self.graphPick.get() == 2:
+                yData = list(country["gdpPercap"])
+                plt.ylabel("gdpPercap")
+                plt.title("Income vs Time")
+            else:
+                yData = list(country["lifeExp"])
+                plt.ylabel("lifeExp")
+                plt.title("Life Expectancy vs Time")
+
+            plt.plot(xData, yData, 'o')
+        plt.show()
+    def addCountry(self):
         pickLocal = self.pick.get()
         if pickLocal not in self.country_data.index:
-            return
-        
-        country = self.country_data.loc[pickLocal]
-        xData = list(country["year"])
-        fig = plt.figure()
-        plt.xlabel("years")
-        print(self.graphPick)
-        if self.graphPick.get() == 1:
-            yData = list(country["pop"])
-            plt.ylabel("pop")
-            plt.title("Population vs Time")
-        
-        elif self.graphPick.get() == 2:
-            yData = list(country["gdpPercap"])
-            plt.ylabel("gdpPercap")
-            plt.title("Income vs Time")
-        else:
-            yData = list(country["lifeExp"])
-            plt.ylabel("lifeExp")
-            plt.title("Life Expectancy vs Time")
+                return
 
-        plt.plot(xData, yData, 'ro')
-        plt.show()
+        self.countryContainer.add(pickLocal)
 
 def main():
     country_data = mlSandbox.getCountryData()
