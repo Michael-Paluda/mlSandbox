@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>{{ title }}</title>
+    </head>
+    <body>
+        <form action = "/index" method = "POST">
+            <h1>Welcome To the Covid Data Viewer</h1>
+            <label for="countries_id">Select a Country:</label>
+            <select name="country" id="countries_id">
+            {% for c in countryList %}
+                <option value = "{{ c }}">{{ c }}</option>
+            {% endfor %}
+            </select>
+            <br><br>
+            <input type="submit" value="Add Country">
+        </form>
+        {% if countryPick %}
+        <p>{{ countryPick }}</p>
+        {% endif %}
+    </body>
+</html>
